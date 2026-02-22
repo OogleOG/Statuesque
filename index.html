@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statuesque - RS3 Clan</title>
+    <meta name="description" content="Statuesque - A RuneScape 3 clan. Always Aiming Higher.">
+    <link rel="icon" href="https://images2.imgbox.com/5b/69/CQ2uyKbe_o.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="index.html" class="nav-brand">
+            <img src="https://images2.imgbox.com/5b/69/CQ2uyKbe_o.png" alt="Statuesque">
+            <span>Statuesque</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="stats.html">Stats</a></li>
+            <li><a href="members.html">Members</a></li>
+            <li><a href="drops.html">Activity</a></li>
+            <li><a href="https://discord.gg/y2BUyERJEM" target="_blank" class="nav-discord">Discord</a></li>
+        </ul>
+        <button class="nav-mobile" id="navToggle">&#9776;</button>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="https://images2.imgbox.com/5b/69/CQ2uyKbe_o.png" alt="Statuesque Logo" class="hero-logo">
+            <h1><span>Statuesque</span></h1>
+            <p class="hero-motto">"Always Aiming Higher"</p>
+            <div class="hero-buttons">
+                <a href="https://discord.gg/y2BUyERJEM" target="_blank" class="btn btn-discord">Join Our Discord</a>
+                <a href="stats.html" class="btn btn-primary">Look Up Stats</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Player Lookup -->
+    <section class="home-section">
+        <div class="container">
+            <div class="home-lookup">
+                <h2>Quick Stat Lookup</h2>
+                <p>Check any player's levels, XP, and recent activity.</p>
+                <div class="search-container" style="margin-bottom:0;">
+                    <input type="text" class="search-input" id="quickRSN" placeholder="Enter a player name..." autocomplete="off">
+                    <button class="search-btn" id="quickSearchBtn">&#x2192;</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clan Info Strip -->
+    <section class="home-section">
+        <div class="container">
+            <div class="home-strip">
+                <div class="home-strip-item">
+                    <span class="home-strip-val" id="memberCount">--</span>
+                    <span class="home-strip-label">Members</span>
+                </div>
+                <div class="home-strip-divider"></div>
+                <div class="home-strip-item">
+                    <span class="home-strip-val">RS3</span>
+                    <span class="home-strip-label">RuneScape 3</span>
+                </div>
+                <div class="home-strip-divider"></div>
+                <div class="home-strip-item">
+                    <span class="home-strip-val">All Levels</span>
+                    <span class="home-strip-label">Welcome</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Members Preview -->
+    <section class="home-section">
+        <div class="container">
+            <div class="home-top-members">
+                <div class="home-section-head">
+                    <h2>Top Members by XP</h2>
+                    <a href="members.html" class="home-view-all">View all members &#x2192;</a>
+                </div>
+                <div id="topMembersGrid" class="home-members-grid">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discord CTA -->
+    <section class="home-section">
+        <div class="container">
+            <div class="home-discord">
+                <div class="home-discord-text">
+                    <h2>Come hang out</h2>
+                    <p>We're most active on Discord. Whether you want to find a team for bossing, ask for advice, or just chat &mdash; drop in.</p>
+                </div>
+                <a href="https://discord.gg/y2BUyERJEM" target="_blank" class="btn btn-discord" style="font-size:1.1rem; padding:14px 36px;">Join the Discord</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024-2026 Statuesque &middot; RuneScape is a trademark of Jagex Ltd.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Quick lookup redirect
+        document.getElementById('quickSearchBtn').addEventListener('click', goLookup);
+        document.getElementById('quickRSN').addEventListener('keydown', e => { if (e.key === 'Enter') goLookup(); });
+        function goLookup() {
+            const rsn = document.getElementById('quickRSN').value.trim();
+            if (rsn) window.location.href = 'stats.html?rsn=' + encodeURIComponent(rsn);
+        }
+
+        // Load member count + top members from clan API
+        async function loadHomeData() {
+            try {
+                const resp = await fetch(proxyUrl(RS_APIS.clanMembers('Statuesque')));
+                if (!resp.ok) return;
+                const buffer = await resp.arrayBuffer();
+                const text = new TextDecoder('iso-8859-1').decode(buffer);
+                if (text.includes('<!DOCTYPE')) return;
+
+                const lines = text.trim().split('\n');
+                const members = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 4) {
+                        members.push({
+                            rsn: parts[0].trim().replace(/\uFEFF/g, '').replace(/\u00A0/g, ' '),
+                            rank: parts[1].trim(),
+                            xp: parseInt(parts[2].trim()) || 0
+                        });
+                    }
+                }
+
+                // Member count
+                document.getElementById('memberCount').textContent = members.length;
+
+                // Top 8 by XP
+                members.sort((a, b) => b.xp - a.xp);
+                const top = members.slice(0, 8);
+                const grid = document.getElementById('topMembersGrid');
+                grid.innerHTML = top.map((m, i) => `
+                    <a href="stats.html?rsn=${encodeURIComponent(m.rsn)}" class="home-member-card">
+                        <span class="home-member-rank">#${i + 1}</span>
+                        <span class="home-member-name">${m.rsn}</span>
+                        <span class="home-member-xp">${formatNumber(m.xp)} XP</span>
+                        <span class="rank-badge ${rankClass(m.rank)}" style="font-size:0.7rem;">${m.rank}</span>
+                    </a>
+                `).join('');
+            } catch (e) {
+                console.log('Could not load home data:', e);
+            }
+        }
+        loadHomeData();
+    </script>
+</body>
+</html>

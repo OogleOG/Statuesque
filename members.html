@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clan Members - Statuesque</title>
+    <meta name="description" content="View all members of the Statuesque RS3 clan.">
+    <link rel="icon" href="https://images2.imgbox.com/5b/69/CQ2uyKbe_o.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="index.html" class="nav-brand">
+            <img src="https://images2.imgbox.com/5b/69/CQ2uyKbe_o.png" alt="Statuesque">
+            <span>Statuesque</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="stats.html">Stats</a></li>
+            <li><a href="members.html" class="active">Members</a></li>
+            <li><a href="drops.html">Activity</a></li>
+            <li><a href="https://discord.gg/y2BUyERJEM" target="_blank" class="nav-discord">Discord</a></li>
+        </ul>
+        <button class="nav-mobile" id="navToggle">&#9776;</button>
+    </nav>
+
+    <div class="page">
+        <div class="container">
+            <div class="page-header">
+                <h1>Clan Members</h1>
+                <p>All members of the Statuesque clan</p>
+            </div>
+
+            <!-- Search filter -->
+            <div class="search-container">
+                <input type="text" class="search-input" id="memberSearch" placeholder="Search members..." autocomplete="off">
+            </div>
+
+            <div class="member-count">Total Members: <span id="totalMembers">--</span></div>
+
+            <!-- Members table -->
+            <div id="membersContainer">
+                <div class="loading"><div class="spinner"></div><p>Loading clan members...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024-2026 Statuesque Clan. RuneScape is a registered trademark of Jagex Ltd.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/members.js"></script>
+</body>
+</html>
