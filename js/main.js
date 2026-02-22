@@ -28,10 +28,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== CORS PROXY ====================
-const CORS_PROXY = 'https://corsproxy.io/?';
+// Multiple proxies with automatic fallback - if one is down, try the next
+const CORS_PROXIES = [
+    { prefix: 'https://api.allorigins.win/raw?url=', encode: true },
+    { prefix: 'https://corsproxy.io/?', encode: true },
+    { prefix: 'https://api.codetabs.com/v1/proxy?quest=', encode: true }
+];
 
 function proxyUrl(url) {
-    return CORS_PROXY + encodeURIComponent(url);
+    // Returns the first proxy URL — used for simple cases
+    return CORS_PROXIES[0].prefix + encodeURIComponent(url);
+}
+
+// Fetch with automatic proxy fallback — tries each proxy until one works
+async function proxyFetch(url) {
+    let lastError;
+    for (const proxy of CORS_PROXIES) {
+        const proxyedUrl = proxy.prefix + (proxy.encode ? encodeURIComponent(url) : url);
+        try {
+            const resp = await fetch(proxyedUrl);
+            if (resp.ok) return resp;
+            // If we get a non-OK response, try next proxy
+            lastError = new Error(`Proxy returned ${resp.status}`);
+        } catch (e) {
+            lastError = e;
+        }
+    }
+    throw lastError || new Error('All CORS proxies failed');
 }
 
 // ==================== RS API HELPERS ====================

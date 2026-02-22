@@ -38,8 +38,7 @@ async function lookupPlayer() {
 
 async function fetchHiscores(rsn) {
     try {
-        const resp = await fetch(proxyUrl(RS_APIS.hiscores(rsn)));
-        if (!resp.ok) return null;
+        const resp = await proxyFetch(RS_APIS.hiscores(rsn));
         const text = await resp.text();
         if (text.includes('<!DOCTYPE') || text.includes('<html')) return null;
         return parseHiscores(text);
@@ -51,8 +50,7 @@ async function fetchHiscores(rsn) {
 
 async function fetchRuneMetrics(rsn) {
     try {
-        const resp = await fetch(proxyUrl(RS_APIS.runemetrics(rsn)));
-        if (!resp.ok) return null;
+        const resp = await proxyFetch(RS_APIS.runemetrics(rsn));
         const data = await resp.json();
         if (data.error) return null;
         return data;

@@ -123,8 +123,7 @@
         // Load member count + top members from clan API
         async function loadHomeData() {
             try {
-                const resp = await fetch(proxyUrl(RS_APIS.clanMembers('Statuesque')));
-                if (!resp.ok) return;
+                const resp = await proxyFetch(RS_APIS.clanMembers('Statuesque'));
                 const buffer = await resp.arrayBuffer();
                 const text = new TextDecoder('iso-8859-1').decode(buffer);
                 if (text.includes('<!DOCTYPE')) return;

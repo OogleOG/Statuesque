@@ -12,8 +12,7 @@ loadMembers();
 
 async function loadMembers() {
     try {
-        const resp = await fetch(proxyUrl(RS_APIS.clanMembers('Statuesque')));
-        if (!resp.ok) throw new Error('API returned ' + resp.status);
+        const resp = await proxyFetch(RS_APIS.clanMembers('Statuesque'));
         // Jagex API returns Latin-1 encoded text - decode properly to handle special chars in names
         const buffer = await resp.arrayBuffer();
         const text = new TextDecoder('iso-8859-1').decode(buffer);

@@ -10,8 +10,7 @@ loadDrops();
 async function loadDrops() {
     try {
         // Get clan members
-        const resp = await fetch(proxyUrl(RS_APIS.clanMembers('Statuesque')));
-        if (!resp.ok) throw new Error('Could not load clan members');
+        const resp = await proxyFetch(RS_APIS.clanMembers('Statuesque'));
         const buffer = await resp.arrayBuffer();
         const text = new TextDecoder('iso-8859-1').decode(buffer);
 
@@ -64,8 +63,7 @@ async function loadDrops() {
 
 async function fetchPlayerActivity(rsn) {
     try {
-        const resp = await fetch(proxyUrl(RS_APIS.runemetrics(rsn)));
-        if (!resp.ok) return [];
+        const resp = await proxyFetch(RS_APIS.runemetrics(rsn));
         const data = await resp.json();
         if (data.error || !data.activities) return [];
 
