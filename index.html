@@ -160,7 +160,12 @@
                 console.log('Could not load home data:', e);
             }
         }
-        loadHomeData();
+        // Wait for DOM + main.js to be fully ready
+        if (typeof proxyFetch === 'function') {
+            loadHomeData();
+        } else {
+            window.addEventListener('load', loadHomeData);
+        }
     </script>
 </body>
 </html>
